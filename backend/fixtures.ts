@@ -77,7 +77,7 @@ const run = async () => {
         {
             author: bob._id,
             name: "Yoga by Bob",
-            image: "images/1de7ad7d-af4a-4a87-9bb8-cd6b5ba4d19a.png",
+            image: "images/51acc1f9-8794-4a28-90f7-de9fd0030e64.jpg",
             description: "Ipsum quam, vestibulum et consectetur adipiscing sit elit. Mattis eleifend malesuada lorem amet, faucibus. Hac non orci, leo, lectus dolor habitasse et consectetur amet amet vulputate molestie orci, sodales lacini.",
             isPublished: true,
         },
@@ -91,7 +91,7 @@ const run = async () => {
         {
             author: fox._id,
             name: "Yoga by Fox",
-            image: "images/1de7ad7d-af4a-4a87-9bb8-cd6b5ba4d19a.png",
+            image: "images/51acc1f9-8794-4a28-90f7-de9fd0030e64.jpg",
             description: "Ipsum quam, vestibulum et consectetur adipiscing sit elit. Mattis eleifend malesuada lorem amet, faucibus. Hac non orci, leo, lectus dolor habitasse et consectetur amet amet vulputate molestie orci, sodales lacini.",
             isPublished: true,
         },
