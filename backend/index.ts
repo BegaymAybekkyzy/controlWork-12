@@ -5,13 +5,14 @@ import cors from "cors";
 import userRouter from "./routers/users";
 import GroupsRouter from "./routers/groups";
 import GroupUserRouter from "./routers/groupUsers";
+import adminRouter from "./routers/admin";
 
 const app = express();
 const port = 8000;
 
 app.use(cors());
 app.use(express.json());
-// app.use("/admin", adminRouter);
+app.use("/admin", adminRouter);
 app.use("/users", userRouter);
 app.use("/groups", GroupsRouter);
 app.use("/group-users", GroupUserRouter);

@@ -10,6 +10,10 @@ interface UserMethods {
 
 export const JWT = process.env.JWT_SECRET || "default_fallback_secret";
 
+export const generateTokenJWT = (user: HydratedDocument<IUser>) => {
+  return jwt.sign({_id: user._id}, JWT, { expiresIn: "365d" })
+}
+
 type UserModel = Model<IUser, {}, UserMethods>;
 
 const ARGON2_OPTIONS = {
@@ -66,7 +70,7 @@ UserSchema.methods.checkPassword = async function (password: string) {
 };
 
 UserSchema.methods.generateToken = function () {
-  this.token = jwt.sign({ _id: this._id }, JWT, { expiresIn: "30d" });
+  this.token = generateTokenJWT(this);
 };
 
 UserSchema.pre("save", async function (next) {

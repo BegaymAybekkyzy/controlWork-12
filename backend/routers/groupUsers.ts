@@ -2,27 +2,39 @@ import express from "express";
 import authentication, {RequestWithUser} from "../middleware/authentication";
 import GroupUser from "../models/GroupUser";
 import {Error} from "mongoose";
+import Group from "../models/Group";
 
 const GroupUserRouter = express.Router();
 
-GroupUserRouter.post("/", authentication, async (req, res, next) => {
+GroupUserRouter.post("/:idGroup", authentication, async (req, res, next) => {
     try {
         const user = (req as RequestWithUser).user;
+        const { idGroup } = req.params;
+
+        const group = await Group.findById(idGroup);
+        if (!group) {
+             res.status(404).send({ error: "Group not found" });
+            return
+        }
+
+        if (group.author.toString() === user._id.toString()) {
+             res.status(400).send({ error: "The author cannot join the group" });
+            return
+        }
+
         const existingUser = await GroupUser.findOne({
             user: user._id,
-            group: req.body.group,
+            group: idGroup,
         });
 
         if (existingUser) {
-            res
-                .status(400)
-                .send({error: "This user is already a member of the group"});
-            return;
+             res.status(400).send({ error: "This user is already a member of the group" });
+            return
         }
 
         const addUserToGroup = new GroupUser({
             user: user._id,
-            group: req.body.group,
+            group: idGroup,
         });
 
         await addUserToGroup.save();
@@ -39,12 +51,12 @@ GroupUserRouter.post("/", authentication, async (req, res, next) => {
     }
 });
 
-GroupUserRouter.get("/:id", authentication, async (req, res, next) => {
+GroupUserRouter.get("/:idGroup", authentication, async (req, res, next) => {
     try {
-        const {id} = req.params;
+        const {idGroup} = req.params;
 
         const users = await GroupUser
-            .find({group: id})
+            .find({group: idGroup})
             .populate({path: "user", select: "displayName"});
 
         res.send(users);
@@ -53,25 +65,27 @@ GroupUserRouter.get("/:id", authentication, async (req, res, next) => {
     }
 });
 
-GroupUserRouter.delete("/:id", authentication, async (req, res, next) => {
+GroupUserRouter.delete("/:idGroupUser", authentication, async (req, res, next) => {
     try {
         const user = (req as RequestWithUser).user;
-        const {id} = req.params;
+        const {idGroupUser} = req.params;
         const groupUser = await GroupUser.findOne({
-            _id: id,
-        }).populate({
-            path: 'group',
-            match: {author: user._id},
+            _id: idGroupUser,
         });
 
+        const group = await Group.findOne({author: user._id});
+
+        if (!group) {
+            res.status(404).json({error: "You are not the author"});
+            return;
+        }
+
         if (!groupUser) {
-            res.status(404).json({error: "GroupUser not found or you are not the author"});
+            res.status(404).json({error: "GroupUser not found"});
             return
         }
 
-        // await GroupUser.findByIdAndDelete(id);
-        console.log(groupUser);
-
+        await GroupUser.findByIdAndDelete(idGroupUser);
         res.send({message: "User removed from group"});
 
     } catch (error) {
