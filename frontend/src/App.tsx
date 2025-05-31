@@ -10,6 +10,8 @@ import GroupsByUser from "./features/Groups/GroupByUser.tsx";
 import ProtectedRoute from "./components/UI/ProtectedRoute/ProtectedRoute.tsx";
 import AddNewGroup from "./features/Groups/AddNewGroup.tsx";
 import UserGroups from "./features/Groups/UserGroups.tsx";
+import UserTrainingGroups from "./features/Groups/UserTrainingGroups.tsx";
+import GroupDetail from "./features/Groups/GroupDetail.tsx";
 
 const App = () => {
     const user = useAppSelector(selectUser);
@@ -25,6 +27,7 @@ const App = () => {
                 <Route path="/registration" element={<Registration />} />
                 <Route path="/authentication" element={<Authentication />} />
                 <Route path="/" element={<Groups />} />
+                <Route path="/group-detail/:id" element={<GroupDetail />} />
                 <Route path="/:userId" element={<GroupsByUser />} />
 
                 <Route
@@ -41,6 +44,15 @@ const App = () => {
                     element={
                         <ProtectedRoute isAllowed={Boolean(user)}>
                             <UserGroups/>
+                        </ProtectedRoute>
+                    }
+                />
+
+                <Route
+                    path="/user-taining-group"
+                    element={
+                        <ProtectedRoute isAllowed={Boolean(user)}>
+                            <UserTrainingGroups/>
                         </ProtectedRoute>
                     }
                 />

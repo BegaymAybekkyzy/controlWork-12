@@ -31,7 +31,7 @@ export const fetchUserGroups = createAsyncThunk<IGroupApi[], string>(
 export const fetchUserTrainingGroups = createAsyncThunk<IGroupApi[], string>(
     "groups/fetchUserTrainingGroups",
     async (idUser) => {
-        const response = await axiosAPI(`groups/user/${idUser}`);
+        const response = await axiosAPI(`group-users/user/${idUser}`);
         return response.data;
     }
 );

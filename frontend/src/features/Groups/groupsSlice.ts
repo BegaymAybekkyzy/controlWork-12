@@ -1,12 +1,21 @@
 import {createSlice} from "@reduxjs/toolkit";
 import type {RootState} from "../../app/store";
 import type {IDetailGroupApi, IGroupApi, IValidationError} from "../../types";
-import {addNewGroup, deleteGroup, fetchAllGroups, fetchByUser, fetchOneGroup, fetchUserGroups} from "./groupsThunks";
+import {
+    addNewGroup,
+    deleteGroup,
+    fetchAllGroups,
+    fetchByUser,
+    fetchOneGroup,
+    fetchUserGroups,
+    fetchUserTrainingGroups
+} from "./groupsThunks";
 
 interface GroupsState {
     allGroups: IGroupApi[];
     groupByUser: IGroupApi[];
     userGroups: IGroupApi[];
+    userTrainingGroups: IGroupApi[];
     groupDetailedInfo: IDetailGroupApi | null;
     fetchLoading: boolean;
     createLoading: boolean;
@@ -18,6 +27,7 @@ interface GroupsState {
 export const initialState: GroupsState = {
     allGroups: [],
     groupByUser: [],
+    userTrainingGroups: [],
     fetchLoading: false,
     groupDetailedInfo: null,
     userGroups: [],
@@ -31,6 +41,7 @@ export const selectAuthorName = (state: RootState) => state.groups.authorName;
 export const selectAllGroups = (state: RootState) => state.groups.allGroups;
 export const selectGroupByUser = (state: RootState) => state.groups.groupByUser;
 export const selectUserGroups = (state: RootState) => state.groups.userGroups;
+export const selectUserTrainingGroups = (state: RootState) => state.groups.userTrainingGroups;
 export const selectGroupDetailedInfo = (state: RootState) => state.groups.groupDetailedInfo;
 export const selectGroupCreateLoading = (state: RootState) => state.groups.createLoading;
 export const selectGroupDeleteLoading = (state: RootState) => state.groups.deleteLoading;
@@ -88,6 +99,17 @@ export const groupsSlice = createSlice({
                 state.groupDetailedInfo = payload;
             })
             .addCase(fetchOneGroup.rejected, (state) => {
+                state.fetchLoading = false;
+            })
+
+            .addCase(fetchUserTrainingGroups.pending, (state) => {
+                state.fetchLoading = true;
+            })
+            .addCase(fetchUserTrainingGroups.fulfilled, (state, {payload}) => {
+                state.fetchLoading = false;
+                state.userTrainingGroups = payload;
+            })
+            .addCase(fetchUserTrainingGroups.rejected, (state) => {
                 state.fetchLoading = false;
             })
 

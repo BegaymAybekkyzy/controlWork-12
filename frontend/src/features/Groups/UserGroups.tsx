@@ -22,13 +22,12 @@ const UserGroups = () => {
 
     }, [dispatch]);
 
-    const deleteOneGroup = async(groupId) => {
+    const deleteOneGroup = async(groupId: string) => {
         const warning = confirm("Are you sure you want to delete this group?");
-        if (warning) {
+        if (warning && user) {
             await dispatch(deleteGroup(groupId)).unwrap();
             await dispatch(fetchUserGroups(user._id));
         }
-        return
     }
 
     let content: React.ReactNode = (

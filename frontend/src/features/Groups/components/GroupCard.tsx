@@ -19,9 +19,10 @@ interface Props {
   user?: IUser | null;
   isUser?: boolean;
   onDelete?:  (id: string) => void;
+  onOpen?: (group: IGroupApi) => void;
 }
 
-const GroupCard: React.FC<Props> = ({ group, user, isUser= false, onDelete }) => {
+const GroupCard: React.FC<Props> = ({ group, user, isUser= false, onDelete, onOpen }) => {
   let imagePath = NoImage;
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -38,10 +39,16 @@ const GroupCard: React.FC<Props> = ({ group, user, isUser= false, onDelete }) =>
 
   return (
     <Card sx={{ width: 345 }}>
-      <CardMedia sx={{ height: 270 }} image={imagePath} title={group.name} />
+      <CardMedia
+          sx={{ height: 270 }}
+          image={imagePath} title={group.name}
+          onClick={() => onOpen?.(group)}
+      />
       <CardContent>
         <Typography gutterBottom variant="h5" component="div">
-         {group.name}
+          <NavLink to={`group-detail/${group._id}`}>
+            {group.name}
+          </NavLink>
         </Typography>
         <Typography variant="body2">
           Author: {
@@ -58,18 +65,25 @@ const GroupCard: React.FC<Props> = ({ group, user, isUser= false, onDelete }) =>
             </Typography>
         )}
         {user && user.role === "admin" && (
-            <Button
-                sx={{ color: "#483D8B" }}
-                component={NavLink}
-            >
-              Delete
-            </Button>
+            <>
+              <Typography>Status: {group.isPublished}</Typography>
+              <Button
+                  sx={{ color: "#483D8B" }}
+              >
+                Delete
+              </Button>
+              <Button
+                  sx={{ color: "#483D8B" }}
+              >
+                Change status
+              </Button>
+            </>
+
         )}
 
         {isUser && (
             <Button
                 sx={{ color: "#483D8B" }}
-                component={NavLink}
                 onClick={() => onDelete(group._id)}
             >
               Delete

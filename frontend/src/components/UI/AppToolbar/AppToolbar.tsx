@@ -94,7 +94,7 @@ const AppToolbar = () => {
                 <MenuItem onClick={handleClose}>
                   <NavLink
                     style={{ textDecoration: "none", color: "inherit" }}
-                    to="my-training-groups"
+                    to="user-taining-group"
                   >
                     My Training groups
                   </NavLink>
