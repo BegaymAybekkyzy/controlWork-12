@@ -6,6 +6,15 @@ import {Error} from "mongoose";
 
 const GroupsAdminRouter = express.Router();
 
+GroupsAdminRouter.get("/", async (_req, res, next) => {
+    try {
+        const allGroups = await Group.find();
+        res.send(allGroups);
+    }catch(err) {
+        next(err);
+    }
+});
+
 GroupsAdminRouter.patch("/:id", async (req, res, next) => {
     try {
         const { id } = req.params;

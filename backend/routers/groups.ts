@@ -68,6 +68,22 @@ GroupsRouter.get("/:id", async (req, res, next) => {
     }
 });
 
+GroupsRouter.get("/user/:idUser", async (req, res, next) => {
+    try {
+        const {idUser} = req.params;
+        const groups = await Group.find({author: idUser})
+            .populate({path: "author", select: "displayName"});
+
+        if (!groups) {
+            res.send({message: "Group not found"});
+            return;
+        }
+        res.send(groups);
+    } catch (error) {
+        next(error);
+    }
+});
+
 GroupsRouter.delete("/:id", authentication, async (req, res, next) => {
     try {
         const user = (req as RequestWithUser).user;

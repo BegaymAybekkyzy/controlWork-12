@@ -6,19 +6,19 @@ import Group from "../models/Group";
 
 const GroupUserRouter = express.Router();
 
-GroupUserRouter.post("/:idGroup", authentication, async (req, res, next) => {
+GroupUserRouter.post("/group/:idGroup", authentication, async (req, res, next) => {
     try {
         const user = (req as RequestWithUser).user;
-        const { idGroup } = req.params;
+        const {idGroup} = req.params;
 
         const group = await Group.findById(idGroup);
         if (!group) {
-             res.status(404).send({ error: "Group not found" });
+            res.status(404).send({error: "Group not found"});
             return
         }
 
         if (group.author.toString() === user._id.toString()) {
-             res.status(400).send({ error: "The author cannot join the group" });
+            res.status(400).send({error: "The author cannot join the group"});
             return
         }
 
@@ -28,7 +28,7 @@ GroupUserRouter.post("/:idGroup", authentication, async (req, res, next) => {
         });
 
         if (existingUser) {
-             res.status(400).send({ error: "This user is already a member of the group" });
+            res.status(400).send({error: "This user is already a member of the group"});
             return
         }
 
@@ -65,34 +65,57 @@ GroupUserRouter.get("/:idGroup", authentication, async (req, res, next) => {
     }
 });
 
-GroupUserRouter.delete("/:idGroupUser", authentication, async (req, res, next) => {
+GroupUserRouter.get("/user/:idUser", authentication, async (req, res, next) => {
     try {
-        const user = (req as RequestWithUser).user;
-        const {idGroupUser} = req.params;
-        const groupUser = await GroupUser.findOne({
-            _id: idGroupUser,
-        });
+        const {idUser} = req.params;
 
-        const group = await Group.findOne({author: user._id});
+        const users = await GroupUser
+            .find({ user: idUser })
+            .populate({
+                path: "group",
+                populate: {
+                    path: "author",
+                    select: "displayName",
+                },
+            });
 
-        if (!group) {
-            res.status(404).json({error: "You are not the author"});
-            return;
+        res.send(users.map((entry) => entry.group));
+    } catch
+        (error)
+        {
+            next(error);
         }
-
-        if (!groupUser) {
-            res.status(404).json({error: "GroupUser not found"});
-            return
-        }
-
-        await GroupUser.findByIdAndDelete(idGroupUser);
-        res.send({message: "User removed from group"});
-
-    } catch (error) {
-        next(error);
     }
-});
+)
+    ;
+
+    GroupUserRouter.delete("/user/:idGroupUser", authentication, async (req, res, next) => {
+        try {
+            const user = (req as RequestWithUser).user;
+            const {idGroupUser} = req.params;
+            const groupUser = await GroupUser.findOne({
+                _id: idGroupUser,
+            });
+
+            const group = await Group.findOne({author: user._id});
+
+            if (!group) {
+                res.status(404).json({error: "You are not the author"});
+                return;
+            }
+
+            if (!groupUser) {
+                res.status(404).json({error: "GroupUser not found"});
+                return
+            }
+
+            await GroupUser.findByIdAndDelete(idGroupUser);
+            res.send({message: "User removed from group"});
+
+        } catch (error) {
+            next(error);
+        }
+    });
 
 
-
-export default GroupUserRouter;
+    export default GroupUserRouter;
