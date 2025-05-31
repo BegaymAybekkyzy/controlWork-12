@@ -15,6 +15,7 @@ import type { InternalAxiosRequestConfig } from "axios";
 import { AxiosHeaders } from "axios";
 import axiosAPI from "../axiosAPI.ts";
 import {userReducer} from "../features/Users/usersSlice.ts";
+import {groupsReducer} from "../features/Groups/groupsSlice.ts";
 
 const userConfig = {
   key: "store: users",
@@ -24,6 +25,7 @@ const userConfig = {
 
 const rootReducer = combineReducers({
   users: persistReducer(userConfig, userReducer),
+  groups: groupsReducer,
 });
 
 export const store = configureStore({

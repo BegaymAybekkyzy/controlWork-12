@@ -9,17 +9,7 @@ export const registration = createAsyncThunk<
   { rejectValue: IValidationError | IError }
 >("users/registration", async (newUser, { rejectWithValue }) => {
   try {
-    const formData = new FormData();
-    const keys = Object.keys(newUser) as (keyof IUserRegistration)[];
-
-    keys.forEach((key) => {
-      const value = newUser[key] as string;
-      if (value !== null) {
-        formData.append(key, value);
-      }
-    });
-
-    const response = await axiosAPI.post("users", formData);
+    const response = await axiosAPI.post("users", newUser);
     return response.data;
 
   } catch (error) {

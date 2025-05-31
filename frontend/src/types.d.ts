@@ -32,3 +32,25 @@ export interface IValidationError {
 export interface IError {
     error: string;
 }
+
+export interface IGroupApi {
+    _id: string;
+    author: {
+        _id: string;
+        displayName: string;
+    },
+    name: string;
+    description: string;
+    image: string;
+    isPublished: boolean;
+}
+
+export interface IDetailGroupApi extends IGroupApi {
+    members: number;
+}
+
+export interface IGroupForm {
+    name: string;
+    image:File | null;
+    description;
+}

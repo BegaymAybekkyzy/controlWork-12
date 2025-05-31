@@ -86,7 +86,7 @@ const AppToolbar = () => {
                 <MenuItem onClick={handleClose}>
                   <NavLink
                     style={{ textDecoration: "none", color: "inherit" }}
-                    to="track-history"
+                    to="my-groups"
                   >
                     My groups
                   </NavLink>
@@ -94,7 +94,7 @@ const AppToolbar = () => {
                 <MenuItem onClick={handleClose}>
                   <NavLink
                     style={{ textDecoration: "none", color: "inherit" }}
-                    to="unpublished-ones"
+                    to="my-training-groups"
                   >
                     My Training groups
                   </NavLink>
@@ -103,23 +103,11 @@ const AppToolbar = () => {
                 <MenuItem onClick={handleClose}>
                   <NavLink
                       style={{ textDecoration: "none", color: "inherit" }}
-                      to="unpublished-ones"
+                      to="add-new-group"
                   >
                     Add new Group
                   </NavLink>
                 </MenuItem>
-
-                {user.role === "admin" && (
-                  <MenuItem onClick={handleClose}>
-                    <NavLink
-                      style={{ textDecoration: "none", color: "inherit" }}
-                      to="/admin/artists"
-                    >
-                      Admin Menu
-                    </NavLink>
-                  </MenuItem>
-                )}
-
                 <MenuItem onClick={onLogout}>Logout</MenuItem>
               </Menu>
             </Box>

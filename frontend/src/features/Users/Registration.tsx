@@ -68,8 +68,6 @@ const Registration = () => {
       >
         Register
       </Typography>
-
-      {errorIsUsername}
       <Box
         sx={{
           display: "flex",
@@ -89,6 +87,8 @@ const Registration = () => {
             }}
           />
         </Grid>
+
+        {errorIsUsername}
 
         <form onSubmit={onSubmitForm}>
           <Grid container justifyContent="center" spacing={2} marginBottom={3}>
