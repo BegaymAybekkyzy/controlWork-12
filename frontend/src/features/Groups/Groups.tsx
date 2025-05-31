@@ -75,6 +75,7 @@ const Groups = () => {
               open={modalOpen}
               onClose={handleClose}
               group={selectedGroup}
+              user={user}
           />
       )}
     </main>

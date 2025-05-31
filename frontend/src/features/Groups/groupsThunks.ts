@@ -44,6 +44,13 @@ export const fetchOneGroup = createAsyncThunk<IDetailGroupApi, string>(
     }
 );
 
+export const groupJoining = createAsyncThunk<void, string>(
+    "groups/fetchOneGroup",
+    async (id) => {
+        await axiosAPI.post(`group-users/group/${id}`)
+    }
+)
+
 export const addNewGroup = createAsyncThunk<
     void,
     IGroupForm,

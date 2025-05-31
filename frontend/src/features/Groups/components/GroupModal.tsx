@@ -6,24 +6,29 @@ import {
     Grid,
     Typography,
     Box,
-    IconButton
+    IconButton, Button
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import type {IGroupApi} from "../../../types";
+import type {IGroupApi, IUser} from "../../../types";
 import {BASE_URL} from "../../../constants.ts";
+import {useAppDispatch} from "../../../app/hooks.ts";
+import {groupJoining} from "../groupsThunks.ts";
 
 interface Props {
     open: boolean;
     onClose: () => void;
     group: IGroupApi,
+    user?: IUser | null;
 }
 
-const GroupModal: React.FC<Props> = ({ open, onClose, group }) => {
+const GroupModal: React.FC<Props> = ({ open, onClose, group, user }) => {
     const imagePath = BASE_URL + "/" + group.image;
+    const dispatch = useAppDispatch()
+
     return (
         <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
             <DialogTitle sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <Typography variant="h5">{group.name}</Typography>
+                <Typography variant="h5" component="span">{group.name}</Typography>
                 <IconButton onClick={onClose}>
                     <CloseIcon />
                 </IconButton>
@@ -58,6 +63,13 @@ const GroupModal: React.FC<Props> = ({ open, onClose, group }) => {
                             Status: {group.isPublished ? "Published" : "Under consideration"}
                         </Typography>
                     </Grid>
+                    {
+                        user &&
+                        <Grid size={12} marginBottom={7}>
+                            <Button onClick={() => dispatch(groupJoining(group._id))}>Join</Button>
+                        </Grid>
+                    }
+
                 </Grid>
             </DialogContent>
         </Dialog>

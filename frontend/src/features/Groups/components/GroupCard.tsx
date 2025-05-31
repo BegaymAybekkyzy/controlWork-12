@@ -34,7 +34,6 @@ const GroupCard: React.FC<Props> = ({ group, user, isUser= false, onDelete, onOp
 
   if (group.image) {
     imagePath = BASE_URL + "/" + group.image;
-
   }
 
   return (
