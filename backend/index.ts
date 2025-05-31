@@ -4,6 +4,7 @@ import * as mongoose from "mongoose";
 import cors from "cors";
 import userRouter from "./routers/users";
 import GroupsRouter from "./routers/groups";
+import GroupUserRouter from "./routers/groupUsers";
 
 const app = express();
 const port = 8000;
@@ -13,6 +14,7 @@ app.use(express.json());
 // app.use("/admin", adminRouter);
 app.use("/users", userRouter);
 app.use("/groups", GroupsRouter);
+app.use("/group-users", GroupUserRouter);
 app.use(express.static("public"));
 
 const run = async () => {

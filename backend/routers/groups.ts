@@ -3,6 +3,7 @@ import Group from "../models/Group";
 import authentication, {RequestWithUser} from "../middleware/authentication";
 import {Error} from "mongoose";
 import {imagesUpload} from "../middleware/multer";
+import GroupUser from "../models/GroupUser";
 
 export const GroupsRouter = express.Router();
 
@@ -40,9 +41,7 @@ GroupsRouter.get("/", async (req, res, next) => {
             : {isPublished: true};
 
         const groups = await Group.find(filter)
-            .populate([
-                {path: "author", select: "displayName"},
-            ])
+            .populate({path: "author", select: "displayName"})
         res.send(groups);
 
     } catch (error) {
@@ -53,18 +52,39 @@ GroupsRouter.get("/", async (req, res, next) => {
 
 GroupsRouter.get("/:id", async (req, res, next) => {
     try {
-        const { id } = req.params;
+        const {id} = req.params;
         const group = await Group.findById(id)
-            .populate([
-                {path: "author", select: "displayName"},
-            ])
+            .populate({path: "author", select: "displayName"});
+
+        const numberOfUsers = await GroupUser.countDocuments({group: id});
 
         if (!group) {
-            res.send({ message: "Group not found" });
+            res.send({message: "Group not found"});
             return;
         }
-        res.send(group);
-    }catch (error) {
+        res.send({...group.toObject(), members: numberOfUsers});
+    } catch (error) {
+        next(error);
+    }
+});
+
+GroupsRouter.delete("/:id", authentication, async (req, res, next) => {
+    try {
+        const user = (req as RequestWithUser).user;
+        const { id } = req.params;
+        const deleteGroup = await Group.deleteOne({
+            _id: id,
+            author: user._id,
+        });
+
+        if (deleteGroup.deletedCount === 0 || !deleteGroup) {
+             res.status(404).send({ error: "You are not the author or group not found" });
+            return
+        }
+
+        await GroupUser.deleteMany({group: id});
+        res.send({message: "Group has been deleted"});
+    } catch (error) {
         next(error)
     }
 });
